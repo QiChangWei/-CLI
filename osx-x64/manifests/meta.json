@@ -1,0 +1,164 @@
+{
+  "name": "dwsal",
+  "displayName": "智能考勤助手",
+  "version": "1.0.9",
+  "description": "钉钉假勤管理 CLI 工具，支持考勤组、班次、排班、排班规则、用户、部门、假期规则、假期余额等全场景操作",
+  "homepage": "https://github.com/QiChangWei/-CLI",
+  "keywords": ["dingtalk", "attendance", "schedule", "shift", "vacation", "mcp"],
+  "auth": {
+    "type": "token",
+    "tokenArg": "--token",
+    "comment": "钉钉客户端宿主启动时自动注入当前用户的 userAccessToken，CLI 内部自动换取项目 JWT"
+  },
+  "commands": [
+    {
+      "name": "login",
+      "description": "登录钉钉账号，支持浏览器 OAuth（默认）、扫码（--qrcode）、Device Flow（--device，无需浏览器）三种模式。DWS 场景无需登录，dws 调用 dwsal skill 时会自动通过 --token 注入钉钉 token。",
+      "usage": "dwsal login [--qrcode] [--device]",
+      "examples": [
+        "dwsal login",
+        "dwsal login --qrcode",
+        "dwsal login --device"
+      ]
+    },
+    {
+      "name": "whoami",
+      "description": "查看当前登录用户信息及企业凭据",
+      "usage": "dwsal whoami",
+      "examples": ["dwsal whoami"]
+    },
+    {
+      "name": "switch",
+      "description": "切换当前活跃企业：无参数时列出已登录企业供选择，也可直接传入企业名称（支持模糊匹配）或 corpId",
+      "usage": "dwsal switch [<企业名称或corpId>]",
+      "examples": ["dwsal switch", "dwsal switch 鸿欢", "dwsal switch 鸿欢科技", "dwsal switch ding123xxx"]
+    },
+    {
+      "name": "group",
+      "description": "考勤组管理：查询、创建、更新、删除考勤组及成员",
+      "subcommands": [
+        {
+          "name": "list",
+          "description": "查询考勤组列表",
+          "usage": "dwsal group list [--corp-id <corpId>] [--op-user-id <userId>] [--search <keyword>]",
+          "examples": ["dwsal group list", "dwsal group list --search 研发"]
+        },
+        {
+          "name": "persons",
+          "description": "查询考勤组内的人员列表",
+          "usage": "dwsal group persons --group-id <groupId>",
+          "examples": ["dwsal group persons --group-id 123"]
+        },
+        {
+          "name": "shifts",
+          "description": "查询考勤组关联的班次列表",
+          "usage": "dwsal group shifts --group-id <groupId>",
+          "examples": ["dwsal group shifts --group-id 123"]
+        },
+        {
+          "name": "create",
+          "description": "创建考勤组",
+          "usage": "dwsal group create --name <name> [--json <json>]",
+          "examples": ["dwsal group create --name 研发考勤组"]
+        },
+        {
+          "name": "modify",
+          "description": "更新考勤组信息",
+          "usage": "dwsal group modify --group-id <groupId> [--json <json>]",
+          "examples": ["dwsal group modify --group-id 123 --name 新名称"]
+        },
+        {
+          "name": "members-modify",
+          "description": "批量更新考勤组人员（加入/移出）",
+          "usage": "dwsal group members-modify --group-id <groupId> --add-user-ids <ids> | --remove-user-ids <ids>",
+          "examples": ["dwsal group members-modify --group-id 123 --add-user-ids user1,user2"]
+        },
+        {
+          "name": "delete",
+          "description": "删除考勤组",
+          "usage": "dwsal group delete --group-id <groupId>",
+          "examples": ["dwsal group delete --group-id 123"]
+        }
+      ]
+    },
+    {
+      "name": "shift",
+      "description": "班次管理：查询、创建、更新、删除班次",
+      "subcommands": [
+        {
+          "name": "list",
+          "description": "查询班次列表",
+          "usage": "dwsal shift list [--search <keyword>]",
+          "examples": ["dwsal shift list", "dwsal shift list --search 早班"]
+        },
+        {
+          "name": "check",
+          "description": "检测匹配的班次（按时间段匹配）",
+          "usage": "dwsal shift check --start-time <HH:mm> --end-time <HH:mm>",
+          "examples": ["dwsal shift check --start-time 09:00 --end-time 18:00"]
+        },
+        {
+          "name": "save",
+          "description": "创建或更新固定班次",
+          "usage": "dwsal shift save --name <name> [--json <json>]",
+          "examples": ["dwsal shift save --name 标准班"]
+        },
+        {
+          "name": "temp-save",
+          "description": "创建或更新临时班次",
+          "usage": "dwsal shift temp-save [--json <json>]",
+          "examples": ["dwsal shift temp-save --json '{\"name\":\"临时班\"}'"]
+        },
+        {
+          "name": "delete",
+          "description": "删除班次",
+          "usage": "dwsal shift delete --shift-id <shiftId>",
+          "examples": ["dwsal shift delete --shift-id 456"]
+        }
+      ]
+    },
+    {
+      "name": "schedule",
+      "description": "排班管理：查询和操作员工排班",
+      "usage": "dwsal schedule <subcommand>",
+      "examples": ["dwsal schedule --help"]
+    },
+    {
+      "name": "schedule-rule",
+      "description": "排班规则管理",
+      "usage": "dwsal schedule-rule <subcommand>",
+      "examples": ["dwsal schedule-rule --help"]
+    },
+    {
+      "name": "user",
+      "description": "用户管理：查询企业内用户信息",
+      "usage": "dwsal user <subcommand>",
+      "examples": ["dwsal user --help"]
+    },
+    {
+      "name": "department",
+      "description": "部门管理：查询企业部门信息",
+      "usage": "dwsal department <subcommand>",
+      "examples": ["dwsal department --help"]
+    },
+    {
+      "name": "vacation-rule",
+      "description": "假期规则管理：查询和配置假期类型规则",
+      "usage": "dwsal vacation-rule <subcommand>",
+      "examples": ["dwsal vacation-rule --help"]
+    },
+    {
+      "name": "vacation-quota",
+      "description": "假期余额管理：查询和调整员工假期余额",
+      "usage": "dwsal vacation-quota <subcommand>",
+      "examples": ["dwsal vacation-quota --help"]
+    }
+  ],
+  "globalOptions": [
+    {
+      "name": "--token",
+      "description": "宿主注入的用户 accessToken（钉钉客户端宿主自动传入，无需手动填写）",
+      "hidden": true
+    }
+  ]
+}

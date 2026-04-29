@@ -1,7 +1,7 @@
 {
   "name": "dwsal",
   "displayName": "智能考勤助手",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "钉钉假勤管理 CLI 工具，支持考勤组、班次、排班、排班规则、用户、部门、假期规则、假期余额等全场景操作",
   "homepage": "https://github.com/QiChangWei/-CLI",
   "keywords": ["dingtalk", "attendance", "schedule", "shift", "vacation", "mcp"],
